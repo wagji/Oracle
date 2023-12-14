@@ -64,7 +64,7 @@ SELECT * FROM EMPLOYEE;
 
 -- 1. 
 
-  SELECT ename 사원이름, dno 부서번호 
+SELECT ename 사원이름, dno 부서번호 
 FROM employee 
 WHERE ENO=7788 ;
 
@@ -72,13 +72,13 @@ WHERE ENO=7788 ;
 
    select ename,hiredate
  from employee
- where hiredate like '%81%' ;
+ where hiredate like '81%' ;
  
  -- 3.
  
   SELECT ENAME, JOB, SALARY
 FROM EMPLOYEE
-WHERE SALARY IN (1600, 950) AND SALARY NOT IN (1300);
+WHERE job IN ('CLERK','SALESMAN') AND SALARY NOT IN (1600,950,1300);
 
 -- 4.
 
@@ -87,10 +87,11 @@ FROM dual;
 
 -- 5.
  
-SELECT dno, TRUNC(salary * 12 + commission / 12, 2) AS 평균연봉
+SELECT dno, ROUND(AVG(salary),2)
 FROM employee
-WHERE TRUNC(salary * 12 + commission / 12, 2) > 2000
-ORDER BY dno ASC;
+group by dno
+having round(avg(salary),2)>=2000
+order by dno asc;
 
 -- 6.
 
@@ -102,22 +103,25 @@ ORDER BY salary ASC;
 
 -- 7.
 
-SELECT DNAME,DNO,LOC
-FROM DEPARTMENT
+SELECT ENAME,D.DNO,DNAME,LOC
+FROM DEPARTMENT D
+JOIN EMPLOYEE E ON E.DNO = D.DNO
+WHERE JOB = 'MANAGER'
 ORDER BY DNAME DESC;
 
 -- 8.
 
 CREATE VIEW v_join 
-SELECT e.ename, e.job, d.dname, d.loc, MIN(e.salary) 
+AS
+SELECT ename, job, dname, loc,salary 
 FROM employee e
 JOIN department d ON e.dno = d.dno
-WHERE e.dno <> 20 
-GROUP BY e.ename, e.job, d.dname, d.loc;
-
-SELECT *
-FROM v_join
-WHERE min_salary >= 900;
+WHERE SALARY IN (
+    SELECT MIN(SALARY) 
+    FROM EMPLOYEE 
+    WHERE dno <> 20 
+    GROUP BY DNO
+    HAVING MIN(SALARY) >=900);
 
 -- 9 .
 

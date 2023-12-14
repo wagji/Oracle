@@ -70,13 +70,13 @@ WHERE ENO=7788 ;
 
 -- 2.
 
-   select ename,hiredate
+   select ename 사원이름 ,hiredate 입사날짜
  from employee
  where hiredate like '81%' ;
  
  -- 3.
  
-  SELECT ENAME, JOB, SALARY
+  SELECT ENAME 사원이름 , JOB 담당부서 , SALARY 월급 
 FROM EMPLOYEE
 WHERE job IN ('CLERK','SALESMAN') AND SALARY NOT IN (1600,950,1300);
 
@@ -87,7 +87,7 @@ FROM dual;
 
 -- 5.
  
-SELECT dno, ROUND(AVG(salary),2)
+SELECT dno 부서번호, ROUND(AVG(salary),2)
 FROM employee
 group by dno
 having round(avg(salary),2)>=2000
@@ -95,7 +95,7 @@ order by dno asc;
 
 -- 6.
 
-SELECT eno, ename
+SELECT eno 부서번호, ename 사원이름
 FROM employee
 WHERE salary > (SELECT AVG(salary) FROM employee)
 ORDER BY salary ASC;
@@ -103,7 +103,7 @@ ORDER BY salary ASC;
 
 -- 7.
 
-SELECT ENAME,D.DNO,DNAME,LOC
+SELECT ENAME 사원이름,D.DNO,DNAME 부서명,LOC 부서위치
 FROM DEPARTMENT D
 JOIN EMPLOYEE E ON E.DNO = D.DNO
 WHERE JOB = 'MANAGER'
@@ -113,7 +113,7 @@ ORDER BY DNAME DESC;
 
 CREATE VIEW v_join 
 AS
-SELECT ename, job, dname, loc,salary 
+SELECT ename 사원이름, job 담당부서, dname 부서명, loc 부서위치,salary 월급
 FROM employee e
 JOIN department d ON e.dno = d.dno
 WHERE SALARY IN (

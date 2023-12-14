@@ -123,6 +123,8 @@ WHERE SALARY IN (
     GROUP BY DNO
     HAVING MIN(SALARY) >=900);
 
+SELECT * FROM v_join;
+
 -- 9 .
 
 create table EMP50

@@ -1,127 +1,252 @@
-select *
-from employee;
+/*
+    -- SQL ; 모든쿼리구문, SELECT, CREAT,ALTAR,DROP,INSSERT,UPDATE,DELETE,GRANT,REVEK,ROLLBACK,COMMIT
+    -- 구조화된 질의언어
+    -- SQL 종류
+    -- DQL :(DATA QUERY LANGUAGE) :출력 ,검색,SELECT,
+    -- DDL :(DATE DEFINTION LANGUAGE) : 스키마 (틀,구조 ) 객체 (테이블,뷰,함수,시퀀스  ,트리거,저장프로그램,인덱스 생성 ,수정매체
+     
+       -- CREATE(생성 ) ,ALTER (수정) ,DROP  (삭제 )
+    
+    -- DNL : (DATA NANUPULARTION LANGUAE ) : 테이블의 레코드를 조작하는언어 
+      
+       -- INSERT (입력 ) , UPDATE (수정) ,DELETE (삭제)
+       -- 트랜젝션이 발생 (RAM) ,  COMMIT : RAM 의 변경된 내용을 DB에 저장해라 ,ROLLBACK :원래대로 되돌림
+       -- 트렌젝션이 INSERT, UPDATE, DELETE 구문이 자동으로 시작되면 ,
+       -- 트렌젝션을 종료 :ROLLBACK : 메모리에 저장된 변경된부분을 원래대로 되돌려라 , COMMIT :DB에 영구적으로 저장함.
+       -- 트렌젝션이 종료되지 않으면 LOCK 이 걸려서 트랜젝션 종료될떄까지 다른사용자 적용이안된다 .
+       -- 오라클 :DNL 문을 시작하면 자동으로 트렌젝션이 시작됨 , 시작만되고 종료는 시켜야함 ,INSERT , UPDATE, DELETE 를 시작함과 동시에 자동으로 작동한다 , <== 명시
+       -- MYSQL .MSSQL : 자동으로 시작 오랜전이시작됨 ,종료 (ROLLBACK , COMMIT) 자동으로 
+      
+       -- 명시적으로 트렌젝션을 시작할수있고 명시적으로 끝낼수 있다 .
+   -- DCL : DATA CONTOROL LANUAGE :  개정 (ACOUNT 
+   -- TCL : TRANSACTCI LCOUNT :트렌젝션을 관리하는 언어 <== DNL 문에서 사용됨 
+   -- 트랜젝션 : 작업 (일) 을 처리하는 최소단위를 트렌젝션이라고 한다  :ALL OR NOTHING : 되면 전부되게하거나 .안되면전부안되게함
+   -- 트렌젝션 LOG 에 기록되어있다 , < ==오류난 시점까지 복원 ,백업시점 시점이아니라 오류난시점까지복원가능 
+   -- 트랜젝션의 4가지 특징 
+   -- 원자성 :(ATOMICITY) : 일을 처리하는 최소단위 
+   -- 일관성 : (CONSTISTENCY) :트렌젝션에서 처리된 결과는 ㄷ일관성을 가진다 ALL ,NOTHING
+   -- 독립성 : (ISOLATION) : 하나의 트렌젝션은 다른 트렌젝션과 연결되어있다  , LOCK 
+   -- 적속성 : (DURAVILITY) :COMMIT , DB 에 영구적으로 저장
+   
+*/
 
--- <문제1>  commission(보너스) 컬럼의 null 인 값만 출력하되 사원번호, 사원이름,입사날짜를 출력 
+-- 테이블 복사
 
-select eno 사원번호, ename 사원이름, hiredate 입사날짜
-from employee 
-where commission is null;
+UPDATE ACCOUNT10
+SET ACCOUNT-10.00
+WHERE NO = 7369 ;
 
--- <문제2> dno(부서번호) 가 20이고 입사날짜가 81년 4월 이후 사원의 이름과 직책과 입사날짜를 출력
+UPDATE ACCOUNT10
+SET ACCOUNT = ACCOUNT - 10.00
+WHERE NO = 7369;
 
-select ename 사원이름, job 직책, hiredate 입사날짜 -- .dno
-from employee
-where dno = 20 and hiredate > '81/04/01';
+-- Create table EMP03 based on EMPLOYEE with column name modifications
 
--- <문제3> 연봉을 계산해서 사원번호, 사원이름, 월급, 보너스, 전체 연봉을 출력
--- 연봉 = 월급 *12 + 보너스
--- nvl (commission ,0 ) : commission 컬럼의 null == > 
--- 조건 전체연봉 : 30000 이상 
+CREATE TABLE ACCOUNT10 AS
+SELECT ENO AS NO, ENAME, SALARY AS ACCOUNT
+FROM EMPLOYEE;
 
- select eno 사원번호,ename 사원이름 ,salary 월급,commission 보너스, 
- salary * 12 +nvl (commission,0) 연봉
- from employee
- where salary *12 + nvl (commission,0 ) > 30000;
+-- Start a transaction
 
--- <문제4> commission이 null 이 아닌 사용자의 이름만 출력 
+BEGIN TRANSACTION;
 
- select ename 이름,commission
- from employee 
- where commission is not null;
+-- Update statements within the transaction
 
--- <문제5> manager (직급상사) 7698 인 사원이름과 직책을 출력.
+UPDATE ACCOUNT10 SET ACOUNT = ACOUNT - 1000000000 WHERE NO = 7369; -- SMITH ACCOUNT - 10억
+UPDATE ACCOUNT10 SET ACOUNT = ACOUNT + 1000000000 WHERE NO = 1934; -- MILLER ACCOUNT + 10억
 
- select job 직책, ename 사원이름,MANAGER
- from employee
- where MANAGER =7698 ;
- 
- select * 
- from employee
- where eno = 7698;
+-- Commit the transaction
 
--- <문제6> 월급이 1500 이상이고 부서가 20인 사원의 사원이름과 입사날짜, 부서번호, 월급을 출력
+COMMIT;
 
-select ename 사원명, hiredate 입사날짜, dno 부서번호,salary 월급
-from employee
-where salary >= 1500 and dno = 20 ; 
+-- If there is an issue, rollback the transaction
+-- ROLLBACK;
 
+CREATE TABLE EMP03
+AS
+SELECT ENO AS NO, ENAME, SALARY AS ACCOUNT
+FROM EMPLOYEE;
 
--- <문제7> 입사날짜가 81년 4월 1일 이상이고 81년 12월 말일까지인 사원 이름과 입사날짜을 출력
--- and
---between A and B : A 와 B 사이
+-- SMITH 에서 MILLER 에게 10억을 입금 : 2개의 UPDATE 구문을 하나의 TRANSECTION 으로 써의  :ALL OR NOTGING
+-- SMITH ACCOUNT - 10억 : UPDATE ACCOUNT 10 SET ACCOUN = ACCOUNT -10 WHERE NO = 7369
+-- MILLER ACOOUNT +10억 : UPDATE ACOUNT10 SET ACOUNT = ACCOUNT +10 WHERE NO = 1934 
 
-select ename 사원이름,  hiredate 입사날짜
-from employee
-where  hiredate >= '81/04/01' and hiredate <= '81/12/31';
+BEGIN TRANSACTION; -- 명시적으로 트렌젝션을 시작
 
+UPDATE ACCOUNT10
+SET ACCOUNT= ACCOUNT -10
+WHERE NO = 7369;
 
-select ename 사원이름,  hiredate 입사날짜
-from employee
-where  hiredate between '81/04/01' and '81/12/31';
+UPDATE ACOUNT10
+SET ACOUNT -10 WHERE NO = 7369;
 
-select ename 사원이름,  hiredate 입사날짜
-from employee
-where hiredate like'81%';
+UPDATE ACOUNT10 
+SET ACOUNT +10 WHERE NO = 1934;
 
--- <문제8> 직책(job) salesman 이면서 연봉이 1500 이상이면서 부서번호가 30인 사원명을 출력
+SELECT * FROM ACCOUNT10;
 
-select ename 사원이름
-from employee
-where job='SALESMAN'and salary >=1500 and dno= 30 ;
+-- 트렌젝션 종료 
 
--- <문제9> 월급이 1500 이하이면서 부서번호가 20번 이 아닌 사원이름과, 월급과, 부서번호를 출력
+ROLLBACK;
+COMMIT;
 
-select ename 사원이름,salary 월급,dno 부서번호
-from employee
-where salary<=1500 and dno!=20 ;
+BEGIN
+   -- Your update statements
+   UPDATE ACCOUNT10 SET ACCOUNT = ACCOUNT - 10.00 WHERE NO = 7369;
 
--- <문제10> 사원번호(eno) 가 7788, 7782 인 부서번호와 이름과 직책을 출력 
+   -- If everything is successful, commit the transaction
+   COMMIT;
 
-select dno 부서번호,ename 사원이름,job
-from employee
-where eno IN (7788,7782) ;
+   -- If there is an issue, rollback the transaction
+   -- ROLLBACK;
+END;
 
--- <문제11> 업무가 [SALESMAN]이 아닌 사원의 사원번호,사원이름,업무,급여 검색
+DESC ACCOUNT10;
 
-select eno 사원번호,ename 사원이름,job 업무,salary 급여
-from employee
-where job !='SALESMAN';
+/*
 
--- <문제12> 급여가 [2000]이상인 사원의 사원번호,사원이름,업무,급여 검색
+DML; INSERT (값을 입력 ) , UPDATE, ( 수정 ) ,DELETE (삭제)
+*/
 
-select eno 사원번호,ename 사원이름,job 업무,salary 급여
-from employee
-where salary >= 2000 ;
+-- 테이블복사
+CREATE TABLE DEPT04
+AS
+SELECT * FROM DEPARTMENT;
 
--- <문제13> 사원이름이 [A],[B],[C]로 시작되는 사원의 사원번호,사원이름,업무,급여 검색
+SELECT * FROM DEPT04;
 
-select eno 사원번호,ename 사원이름,job 업무,salary 급여
-from employee
-where ename < 'D' ;
+-- dept03 : primary key 제약조건 추가
 
--- <문제14> [1981년 5월 1일]이전에 입사한 사원의 사원번호,사원이름,업무,급여,입사일 검색
-
-select eno 사원번호,ename 사원이름,job 업무,salary 급+-여,hiredate 입사일
-from employee
-where hiredate < '81/05/01' ; 
+alter Table dept04
+add constraint PK_DEPT04_DNO PRIMARY KEY (DNO); 
 
 
--- <문제15> 업무가 [SALESMAN]인 사원 중 급여가 [1500]이상인 사원의 사원번호,사원이름,업무,급여 검색
+-- INSERT : 새로운 값을 추가할때 . 주의사항 :각 컬럼에 자료형  : NUMBER ,문자 ,날짜 ,
 
-select eno 사원번호,ename 사원이름,job 업무,salary 급여
-from employee
-where job = 'SALESMAN' or salary >= 1500 ; 
+desc dept04;
+
+select * from user_constraints where table_name in ('DEPT04') ;
+
+-- INSERT INTO  테이블명 ( 컬럼명 ,컬럼명,컬럼명 ) VALUES (값 ,값, 값 0 ; 
+
+INSERT INTO DEPT04 (DNO,DNAME,LOC)
+VALUES (50,'HR','SEOUL') ;
+
+ROLLBACK ;
+COMMIT ;
+
+SELECT * FROM DEPT04;
+
+-- INSERT 시 컬럼이름을 명시 하지않는 경우 모든컬럼의 값을 넣어야함
+INSERT INTO DEPT04
+VALUES (60, '인사부' , '부산');
+
+INSERT INTO DEPT04
+VALUES (70,'인사부' );
+
+INSERT INTO DEPT04 (DNAME,DNO) 
+VALUES ('영업부' , 80);
 
 
--- <문제16> 부서번호가 [10]이거나 업무가 [MANAGER]인 사원의 사원번호,사원이름,업무,급여,부서번호 검색
+-- UPDATE 문 :입력된 값을 수정시 사용 ,반드시 WHERE 조거능 사용해야한다 ,WHERE 조건에 사욧ㅇ되는 컬럼은 PROMARY KEY 를 커럶하여야함
+/*
+UPDATE 테이블명
+SET 컬럼명 = 바꿀값, 커럶명 = 바꿀값
+WHERE 조건
+*/
+-----
+COMMIT ;
+ROLLBACK ;
+SELECT * FROM DEPT04;
+---
+UPDATE DEPT04
+SET LOC = '대구'
+WHERE DNO= 80;
+--
+UPDATE DEPT04
+SET DNAME = '관리부'
+WHERE DNO= 40;
+--
+UPDATE DEPT04
+SET LOC = '광주'
+WHERE DNO= 40;
+--
+INSERT INTO DEPT04
+VALUES ( 90,'영업부','청주' );
 
-select eno 사원번호,ename 사원이름,job 업무,salary 급여,dno 부서번호
-from employee
-where dno=10 and job='MANAGER';
+INSERT INTO DEPT04
+VALUES ( 70,'인쇄','충주' );
 
--- <문제17> 급여가 [1000~3000]인 사원의 사원번호,사원이름,업무,급여 검색
+-- UPDATE 에서 반드시 WHERE 조건 , 조건을 처리하는 PRI MARY KEY UNIQUE 키컬럼을정의
 
-select eno 사원번호,ename 사원이름,job 업무,salary 급여
-from employee
-where salary >=1000 and salary <=3000 ; 
+UPDATE DEPT04
+SET DNAME = '생산부' 
+WHERE DNO = 80;
+
+-- UP DATE 시 GIRMARY KEY 컬럼을 조건으로 처리해서 원하는 값ㅅ만수정
+UPDATE DEPT04
+SET DANME = '인쇄부'
+WHERE DNO IN (91 ,80) ;
+
+-- DELETE : 레코드를 삭제할떄 ,WHERE가 필수 , 
+-- DELETE 테이블명 WHERE조건
+
+SELECT * FROM DEPT04;
+
+DELETE DEPT04 ;
+
+--DELETE , WHERE 조건사용 :
+
+DELETE DEPT04
+WHERE DNO= 91 ;
+
+-- 모든레코드들 ,테이블에있는 모든값을 삭제 : 
+-- DELETE 에 WHERE조건없이 : 레코드 하나하나를 삭제함 :삭제를하나하나해서시간이오래걸림 LOW LEVEL FORMAT
+-- TRUNCAT TABLE 테이블명 :  PAST FORMAT 한꺼번에 모든레코드를 날림
+-- DROP TABLE 테이블명 : 테이블 자체를 삭제 
+
+SELECT * FROM DEPT03;
+ROLLBACK;
+DELETE DEPT03;
+/*
+DML :INESRT (값을입력 
+ <== 트렌젝션 자동시작
+ <== 
+*/
+TRUNCATE TABLE EMP04;
+  
+  CREATE TABLE EMP05
+  AS 
+    SELECT * FROM EMPLOYEE;
+
+  SELECT * FROM EMP05;
+
+  CREATE TABLE EMP05;
+
+/* EMP05
+ 임의의 값을추가 :INSERT
+  임의의 값을 수정 : UPDATE 
+  임의의값을삭제 : DELETE 
+
+  */
+  SELECT * FROM EMP05;
+  
+    ROLLBACK;
+    
+  COMMIT;
+
+UPDATE EMP05
+SET DNAME = '관리부'
+WHERE DNO= 40;
+
+INSERT INTO EMP05 (DNAME,DNO) 
+VALUES ('영업부' , 80);
+  
+DELETE EMP05
+WHERE = NULL ;
+
+INSERT INTO EMP05 (COMMISSION)
+VALUES (300);
+  
+
 

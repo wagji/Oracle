@@ -1,7 +1,22 @@
-create user C##HR identified by 1234
-default tablespace USERS
-temporary tablespace TEMP;
+GRANT CREATE VIEW TO C#HR;     
+GRANT CREATE VIEW TO C##HR;
 
-grant resource, connect to C##HR;
+SELECT * FROM EMP02;
 
-alter user c##HR quota unlimited on USERS;
+CREATE VIEW V_EMP02
+AS
+SELECT ENAME,JOB,DNO
+FROM EMP02;
+
+SELECT 컬러명 FROM 테이블명 
+
+SELECT *FROM V_EMP02;
+
+SELECT * FROM USER_VIEWS;
+
+GRANT CREATE VIEW TO C##HR;
+
+CREATE VIEW MY_EMP_VIEW AS
+SELECT EMPNO, ENAME, JOB
+FROM EMP;
+

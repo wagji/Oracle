@@ -84,28 +84,19 @@ SELECT ename AS 사원이름
 FROM employee
 WHERE SUBSTR(ename, 3, 1) = 'R';
 
-SELECT ENAME
-FROM EMPLOYEE
-WHERE ENAME LIKE '__R%'
-
 -- 13. 이름에 A 와 E 를 모두 포함하고 있는 사원의 이름을 표시하시오.
 
 SELECT ename AS 사원이름
 FROM employee
 WHERE INSTR(ename, 'A') > 0 AND INSTR(ename, 'E') > 0;
-
-select ename
-from employee
-where ename like '%A%' and ename like '%E%'
-
-select ename,instr(ename,'A'),instr(ename,'E')from employee;
  
 -- 14. 담당 업무가 사무원(CLERK) 또는 영업사원(SALESMAN)이면서 
     --  급여가 $1600, $950, 또는 $1300 이 아닌 사원의 이름, 담당업무, 급여를 출력하시오.
     
 SELECT ename AS 사원이름, job AS 담당업무, salary AS 급여
 FROM employee
-WHERE (job = 'CLERK' OR job = 'SALESMAN') AND salary NOT IN (1600, 950, 1300);
+WHERE (job = 'CLERK' OR job = 'SALESMAN') AND
+      salary NOT IN (1600, 950, 1300);
 
 -- 15. 커미션이 $500이상인 사원의 이름과 급여 및 커미션을 출력하시오.  
 
